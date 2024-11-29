@@ -1,2 +1,9 @@
 Pandas
 Numpy
+
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+passlib[bcrypt]
+

@@ -21,6 +21,23 @@ class Client(Base):
     # Определение отношения с картами
     cards = relationship("Card", back_populates="owner")
 
+class Transaction(Base):
+    __tablename__ = 'transactions'
+
+    transaction_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    ip = Column(String, default="0.0.0.0")  # IP адрес по умолчанию
+    device_id = Column(Integer, nullable=False)
+    device_type = Column(String, nullable=False)
+    tran_code = Column(String, default="UNKNOWN")  # Код операции по умолчанию
+    mcc = Column(String, nullable=False)
+    datetime = Column(DateTime, default=lambda: datetime.now(timezone))  # Текущее время по умолчанию
+    sum = Column(Float, nullable=False)
+    oper_type = Column(String, nullable=False)
+    oper_status = Column(String, nullable=False)
+    pin_inc_count = Column(Integer, default=0)  # Количество неверных попыток ПИН-кода
+    client_id = Column(Integer, ForeignKey("clients.id"))  # Связь с клиентом
+
+    client = relationship("Client", back_populates="transactions")
 
 class Card(Base):
     __tablename__ = 'cards'

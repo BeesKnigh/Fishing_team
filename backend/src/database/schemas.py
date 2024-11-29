@@ -25,6 +25,28 @@ class Client(ClientBase):
     class Config:
         orm_mode = True  # Для работы с SQLAlchemy моделями
 
+# Схема для транзакции
+class TransactionBase(BaseModel):
+    device_id: int
+    device_type: str
+    mcc: str
+    sum: float
+    oper_type: str
+    oper_status: str
+    pin_inc_count: Optional[int] = 0
+
+class TransactionCreate(TransactionBase):
+    pass
+
+class Transaction(TransactionBase):
+    transaction_id: int
+    ip: str
+    datetime: datetime
+    client_id: int
+
+    class Config:
+        orm_mode = True
+
 # Модели для карты
 class CardBase(BaseModel):
     card_type: str

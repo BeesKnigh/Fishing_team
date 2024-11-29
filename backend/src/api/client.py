@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from database.models import Client as DBClient, SessionLocal, Card as DBCard
-from database.schemas import Client, ClientCreate, Card, CardCreate, Token, TokenData
+from database.models import Client as DBClient, Transaction as DBTransaction, Card as DBCard
+from database.schemas import Client, ClientCreate, Transaction, TransactionCreate, Card, CardCreate, TokenData, Token
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from typing import List
+from database.database import get_db
 
 router = APIRouter()
 
@@ -16,14 +17,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
-
-# Зависимость для получения сессии базы данных
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 # Функция для хеширования пароля
 def hash_password(password: str) -> str:
@@ -94,6 +87,38 @@ def create_client(client: ClientCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_client)
     return db_client
+
+# Получить все транзакции
+@router.get("/transactions", response_model=List[Transaction])
+def get_transactions(db: Session = Depends(get_db)):
+    transactions = db.query(DBTransaction).all()
+    return transactions
+
+# Получить транзакцию по ID
+@router.get("/transactions/{transaction_id}", response_model=Transaction)
+def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    transaction = db.query(DBTransaction).filter(DBTransaction.transaction_id == transaction_id).first()
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    return transaction
+
+# Создать новую транзакцию
+@router.post("/transactions", response_model=Transaction)
+def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
+    db_transaction = DBTransaction(
+        device_id=transaction.device_id,
+        device_type=transaction.device_type,
+        mcc=transaction.mcc,
+        sum=transaction.sum,
+        oper_type=transaction.oper_type,
+        oper_status=transaction.oper_status,
+        pin_inc_count=transaction.pin_inc_count,
+        client_id=transaction.client_id
+    )
+    db.add(db_transaction)
+    db.commit()
+    db.refresh(db_transaction)
+    return db_transaction
 
 # Получить все карты для клиента
 @router.get("/cards/{client_id}", response_model=List[Card])

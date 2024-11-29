@@ -1,14 +1,20 @@
-body {
-    background-color: #f4f4f9;
-    color: #1d1c1c;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
 
+body {
+    background-color: #f4f4f9;
+    color: #1d1c1c;
+}
+
 .login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 30px;
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -20,25 +26,25 @@ h1 {
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
-    font-weight: bold;
     display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 .input-group input {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 button {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     background-color: #5aa175;
     color: white;
     border: none;
@@ -49,11 +55,46 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #4e8f61;
 }
 
 .error-message {
-    color: red;
-    text-align: center;
     margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+/* Стили для всплывающего уведомления (Toast) */
+.toast {
+    visibility: hidden;  /* Скрыто по умолчанию */
+    min-width: 250px;
+    margin-left: -125px; /* Центрируем по горизонтали */
+    background-color: #4CAF50; /* Зеленый цвет */
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left
+/* Стили для всплывающего уведомления (Toast) */
+.toast {
+    visibility: hidden;  /* Скрыто по умолчанию */
+    min-width: 250px;
+    margin-left: -125px; /* Центрируем по горизонтали */
+    background-color: #4CAF50; /* Зеленый цвет */
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%; /* Центрирование по горизонтали */
+    bottom: 30px; /* Установим снизу */
+    font-size: 16px;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
 }

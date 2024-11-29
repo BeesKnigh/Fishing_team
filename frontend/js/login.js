@@ -1,21 +1,26 @@
-document.getElementById('login-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const login = document.getElementById('login').value;
-    const password = document.getElementById('password').value;
+// Получаем элементы формы входа
+const loginForm = document.getElementById("login-form");
+const errorMessage = document.getElementById("error-message");
 
-    // Здесь можно отправить запрос на сервер
-    // Например:
-    // fetch('/login', {
-    //     method: 'POST',
-    //     body: JSON.stringify({ login, password }),
-    //     headers: { 'Content-Type': 'application/json' }
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.success) {
-    //         window.location.href = 'dashboard.html'; // Перенаправление на страницу после успешного входа
-    //     } else {
-    //         document.getElementById('error-message').textContent = 'Неверный логин или пароль';
-    //     }
-    // });
+// Обработчик отправки формы входа
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();  // Останавливаем стандартную отправку формы
+
+    // Получаем введенные значения логина и пароля
+    const login = document.getElementById("login").value;
+    const password = document.getElementById("password").value;
+
+    // Получаем сохраненные значения из localStorage
+    const storedLogin = localStorage.getItem("userLogin");
+    const storedPassword = localStorage.getItem("userPassword");
+
+    // Проверяем, совпадают ли логин и пароль
+    if (login === storedLogin && password === storedPassword) {
+        // Перенаправляем на профиль, если данные верные
+        window.location.href = "profile.html";  // Профиль или другая страница
+    } else {
+        // Если данные неверные, показываем ошибку
+        errorMessage.textContent = "Неверный логин или пароль.";
+        errorMessage.style.color = "red";
+    }
 });

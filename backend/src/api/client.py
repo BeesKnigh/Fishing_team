@@ -8,6 +8,7 @@ router = APIRouter()
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
+
 # Зависимость для получения сессии базы данных
 def get_db():
     db = SessionLocal()
@@ -16,19 +17,23 @@ def get_db():
     finally:
         db.close()
 
+
 # Функция для хеширования пароля
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
+
 # Функция для проверки пароля
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
 
 # Получить всех клиентов
 @router.get("/clients", response_model=list[Client])
 def get_clients(db: Session = Depends(get_db)):
     clients = db.query(DBClient).all()
     return clients
+
 
 # Получить клиента по ID
 @router.get("/clients/{client_id}", response_model=Client)
@@ -37,6 +42,7 @@ def get_client(client_id: int, db: Session = Depends(get_db)):
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     return client
+
 
 # Создать нового клиента
 @router.post("/clients", response_model=Client)
@@ -48,3 +54,17 @@ def create_client(client: ClientCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_client)
     return db_client
+
+
+# Вход в систему
+@router.post("/login")
+def login(client: ClientCreate, db: Session = Depends(get_db)):
+    db_client = db.query(DBClient).filter(DBClient.name == client.name).first()
+    if not db_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    # Проверка пароля
+    if not verify_password(client.client_pas, db_client.client_pas):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    return {"message": "Login successful"}

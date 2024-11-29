@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Страница входа</title>
-    <link rel="stylesheet" href="styles_login.css">
+    <link rel="stylesheet" href="../css/styles_login.css">
 </head>
 <body>
 
@@ -12,8 +12,8 @@
         <h1>Вход в систему</h1>
         <form id="login-form">
             <div class="input-group">
-                <label for="email">Логин:</label>
-                <input type="email" id="email" name="email" required placeholder="Введите email">
+                <label for="login">Логин:</label>
+                <input type="text" id="login" name="login" required placeholder="Введите логин">
             </div>
             <div class="input-group">
                 <label for="password">Пароль:</label>
@@ -24,6 +24,6 @@
         <div id="error-message" class="error-message"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../js/login.js"></script>
 </body>
 </html>

@@ -4,30 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <link rel="stylesheet" href="styless.css">
+    <link rel="stylesheet" href="../css/styles_login.css">
 </head>
 <body>
 
-    <div class="register-container">
+    <div class="login-container">
         <h1>Регистрация</h1>
         <form id="register-form">
             <div class="input-group">
-                <label for="email">Логин:</label>
-                <input type="email" id="email" name="email" required placeholder="Введите email">
+                <label for="login">Логин:</label>
+                <input type="text" id="login" name="login" required placeholder="Введите логин">
             </div>
             <div class="input-group">
                 <label for="password">Пароль:</label>
                 <input type="password" id="password" name="password" required placeholder="Введите пароль">
             </div>
-            <div class="input-group">
-                <label for="confirm-password">Подтверждение пароля:</label>
-                <input type="password" id="confirm-password" name="confirm-password" required placeholder="Подтвердите пароль">
-            </div>
             <button type="submit" id="register-btn">Зарегистрироваться</button>
         </form>
-        <div id="error-message" class="error-message"></div>
     </div>
 
-    <script src="register.js"></script>
+    <script src="../js/register.js"></script>
 </body>
 </html>

@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль</title>
-    <link rel="stylesheet" href="css/styles_profile.css">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="../css/profile.css">
 </head>
 <body>
 
     <div class="profile-container">
-        <h1>Добро пожаловать! <span id="username"></span></h1>
-        <button onclick="logout()">Выйти</button>
+        <h1>Профиль пользователя</h1>
+        <div class="profile-info">
+            <p>Добро пожаловать, <span id="user-name"></span>!</p>
+        </div>
+
+        <!-- Кнопки действий в профиле (убраны кнопки редактирования) -->
+        <div class="profile-actions">
+            <button class="profile-btn" id="transfers-btn">Переводы</button> <!-- Оставлена только кнопка "Переводы" -->
+            <button class="profile-btn" id="logout-btn">Выйти</button>
+        </div>
     </div>
 
-    <script src="js/profile.js"></script>
+    <script src="../js/profile.js"></script>
+    <script src="../js/logout.js"></script>
 </body>
 </html>

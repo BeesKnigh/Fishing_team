@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переводы</title>
+    <link rel="stylesheet" href="../css/transfers.css">
+</head>
+<body>
+
+    <div class="transfers-container">
+        <h1>Оформить транзакцию</h1>
+        
+        <form id="transfer-form">
+            <!-- Тип операции -->
+            <div class="input-group">
+                <label for="oper_type">Тип операции:</label>
+                <select id="oper_type" name="oper_type" required>
+                    <option value="">Выберите тип операции</option>
+                    <option value="purchase">Покупка</option>
+                    <option value="refund">Возврат</option>
+                    <option value="transfer">Перевод</option>
+                    <option value="withdrawal">Снятие наличных</option>
+                </select>
+            </div>
+
+            <!-- Сумма операции -->
+            <div class="input-group">
+                <label for="sum">Сумма операции:</label>
+                <input type="number" id="sum" name="sum" required placeholder="Введите сумму" min="1">
+            </div>
+
+            <!-- Количество неверных попыток ввода PIN -->
+            <div class="input-group">
+                <label for="pin_inc_count">Неверные попытки ввода PIN:</label>
+                <input type="number" id="pin_inc_count" name="pin_inc_count" required placeholder="Введите количество неверных попыток" min="0">
+            </div>
+
+            <!-- Статус операции -->
+            <div class="input-group">
+                <label for="oper_status">Статус операции:</label>
+                <select id="oper_status" name="oper_status" required>
+                    <option value="">Выберите статус операции</option>
+                    <option value="pending">В ожидании</option>
+                    <option value="completed">Завершено</option>
+                    <option value="failed">Неудача</option>
+                </select>
+            </div>
+
+            <button type="submit" id="transfer-btn">Оформить транзакцию</button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="../js/transfers.js"></script>
+</body>
+</html>

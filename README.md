@@ -33,7 +33,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # установка необходимых библиотек в виртуальное окружение
-pip install -r equirements.txt
+pip install -r requirements.txt
 ```
 
 ## Режим разработки

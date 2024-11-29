@@ -53,12 +53,12 @@ atom-compliance-ml
 ├─ logs                          # Логи инференса (FULL LAUNCH)
 ├─ frontend                      # Весь фронтенд проекта
 ├─ backend                       # Весь бекенд проекта
-|  ├─ src                       
+│  ├─ src                       
 └─ model
    ├─ src
-   |  ├─ notebooks   
-   |  ├─ modules
-   |  ├─ scripts 
+   │  ├─ notebooks   
+   │  ├─ modules
+   │  ├─ scripts 
    ├─ eda                             # Ноутбуки для обучения и экспериментов, модули
    ├─ models                    # Функциональная и бизнес логика, используемая во всех ноутбуках  
 

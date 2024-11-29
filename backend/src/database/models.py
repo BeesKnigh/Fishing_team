@@ -3,6 +3,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from datetime import datetime
+import pytz
+
+# Указываем часовой пояс UTC+3
+timezone = pytz.timezone("Europe/Moscow")  # или другой нужный тебе часовой пояс
 
 Base = declarative_base()
 
@@ -12,7 +16,9 @@ class Client(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     client_pas = Column(String)  # Пароль, будем хешировать
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone))  # Используем текущий часовой пояс
+
+
 
 # Создание базы данных
 DATABASE_URL = "sqlite:///./test.db"  # Используем SQLite для простоты

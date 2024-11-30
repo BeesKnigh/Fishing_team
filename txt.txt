@@ -1,0 +1,44 @@
+Данные
+Название   Формат    Пример данных
+transaction_id|int64|1157921
+
+ip|object|91.107.0.90
+
+device_id|float64|982.0
+
+device_type|object|port_trm
+
+tran_code|int64|30
+
+mcc|int64|7103
+
+client_id|int64|969838140
+
+card_type|object|DEBIT
+
+pin_inc_count|int64|0
+
+card_status|object|active
+
+expiration_date|object|2030-06-10
+
+datetime|object|2022-03-09 09:56:51
+
+sum|float64|510.22
+
+oper_type|object|transfer
+
+balance|float64|670814.78
+
+
+
+коды транзакций:
+-1  -   отколнено
+25  -   Перевод в другую страну
+30  -   Перевод
+
+
+
+перевести act и blk в active и blocked
+atm = ATM 
+pos trm, prtbl trm, port_trm, Portable term = port_trm

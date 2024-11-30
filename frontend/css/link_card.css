@@ -1,4 +1,3 @@
-/* link_card.css */
 * {
     margin: 0;
     padding: 0;
@@ -36,7 +35,8 @@ h1 {
     margin-bottom: 5px;
 }
 
-.input-group input {
+.input-group input,
+.input-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -64,4 +64,5 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
+    color: #4CAF50; /* Зеленый цвет для успешного сообщения */
 }

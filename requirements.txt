@@ -1,2 +1,11 @@
 Pandas
 Numpy
+fastapi
+uvicorn
+sqlalchemy
+passlib[bcrypt]
+python-jose
+pytz
+
+
+

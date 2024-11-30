@@ -75,4 +75,7 @@ atom-compliance-ml
 - Варвара, Designer
    - @shterenfeld
 
+
+
 ![alt text](team_logov2.png)
+

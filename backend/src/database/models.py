@@ -21,6 +21,8 @@ class Client(Base):
     # Определение отношения с картами
     cards = relationship("Card", back_populates="owner")
 
+    transactions = relationship("Transaction", back_populates="client")  # Добавьте эту строку
+
 class Transaction(Base):
     __tablename__ = 'transactions'
 
@@ -35,7 +37,7 @@ class Transaction(Base):
     oper_type = Column(String, nullable=False)
     oper_status = Column(String, nullable=False)
     pin_inc_count = Column(Integer, nullable=False)  # Количество неверных попыток ПИН-кода
-    client_id = Column(Integer, ForeignKey("clients.id"))  # Связь с клиентом
+    client_id = Column(Integer, ForeignKey("clients.id"), nullable=False)  # Указываем внешний ключ
     client = relationship("Client", back_populates="transactions")
 
 class Card(Base):

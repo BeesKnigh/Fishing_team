@@ -34,7 +34,7 @@ class TransactionBase(BaseModel):
     oper_type: str
     oper_status: str
     pin_inc_count: Optional[int] = 0
-
+    client_id: int
 class TransactionCreate(TransactionBase):
     pass
 

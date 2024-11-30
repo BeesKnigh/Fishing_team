@@ -38,6 +38,13 @@ class Transaction(Base):
     oper_status = Column(String, nullable=False)
     pin_inc_count = Column(Integer, nullable=False)  # Количество неверных попыток ПИН-кода
     client_id = Column(Integer, ForeignKey("clients.id"), nullable=False)  # Указываем внешний ключ
+
+    # Добавим новые поля из модели Card
+    card_type = Column(String, nullable=False)  # Новое поле для типа карты
+    card_status = Column(String, nullable=False)  # Новое поле для статуса карты
+    expiration_date = Column(String, nullable=False)  # Новое поле для даты истечения срока карты
+    balance = Column(Float, nullable=False)  # Новое поле для баланса карты
+
     client = relationship("Client", back_populates="transactions")
 
 class Card(Base):

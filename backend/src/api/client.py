@@ -26,6 +26,35 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
+# Функция для добавления карт в таблицу транзакций
+def add_cards_to_transactions(db: Session):
+    # Получаем все карты из базы данных
+    cards = db.query(DBCard).all()
+
+    # Для каждой карты создаем транзакцию
+    for card in cards:
+        # Пример создания транзакции, данные для транзакции могут быть изменены в зависимости от логики
+        db_transaction = DBTransaction(
+            device_id=12345,  # Примерное значение
+            device_type="ATM",  # Примерное значение
+            tran_code=30,  # Примерное значение
+            mcc=1000,  # Примерное значение
+            datetime=datetime.now(),  # Время создания транзакции
+            sum=card.balance,  # Баланс карты как сумма транзакции (можно заменить другой логикой)
+            oper_type="purchase",  # Примерный тип операции
+            oper_status="success",  # Примерный статус операции
+            pin_inc_count=0,  # Примерное значение
+            client_id=card.client_id  # Привязываем к клиенту
+        )
+
+        # Добавляем транзакцию в сессию и сохраняем
+        db.add(db_transaction)
+
+    # Сохраняем все транзакции в базе данных
+    db.commit()
+
+
 # Функция для создания JWT токена
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
     to_encode = data.copy()
@@ -105,16 +134,39 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
 # Создать новую транзакцию
 @router.post("/transactions", response_model=Transaction)
 def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
-    db_transaction = DBTransaction(
-        device_id=transaction.device_id,
-        device_type=transaction.device_type,
-        mcc=transaction.mcc,
-        sum=transaction.sum,
-        oper_type=transaction.oper_type,
-        oper_status=transaction.oper_status,
-        pin_inc_count=transaction.pin_inc_count,
-        client_id=transaction.client_id
-    )
+    # Получаем карту по client_id
+    db_card = db.query(DBCard).filter(DBCard.client_id == transaction.client_id).first()
+
+    if db_card:
+        # Если карта найдена, создаем транзакцию с данными карты
+        db_transaction = DBTransaction(
+            device_id=transaction.device_id,
+            device_type=transaction.device_type,
+            mcc=transaction.mcc,
+            sum=transaction.sum,
+            oper_type=transaction.oper_type,
+            oper_status=transaction.oper_status,
+            pin_inc_count=transaction.pin_inc_count,
+            client_id=transaction.client_id,
+            card_type=db_card.card_type,  # Добавляем тип карты
+            card_status=db_card.card_status,  # Добавляем статус карты
+            expiration_date=db_card.expiration_date,  # Добавляем дату истечения
+            balance=db_card.balance  # Добавляем баланс
+        )
+    else:
+        # Если карта не найдена, создаем транзакцию без данных карты
+        db_transaction = DBTransaction(
+            device_id=transaction.device_id,
+            device_type=transaction.device_type,
+            mcc=transaction.mcc,
+            sum=transaction.sum,
+            oper_type=transaction.oper_type,
+            oper_status=transaction.oper_status,
+            pin_inc_count=transaction.pin_inc_count,
+            client_id=transaction.client_id
+        )
+
+    # Добавляем транзакцию в базу данных
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
@@ -138,7 +190,9 @@ def create_card(card: CardCreate, db: Session = Depends(get_db)):
         balance=card.balance,
         client_id=card.client_id
     )
+
     db.add(db_card)
     db.commit()
     db.refresh(db_card)
+    add_cards_to_transactions(db)
     return db_card

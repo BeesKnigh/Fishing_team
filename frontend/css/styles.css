@@ -1,0 +1,60 @@
+/* Стили для кнопок */
+a.login-btn, a.register-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #5aa175;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+a.login-btn:hover, a.register-btn:hover {
+    background-color: #45a049;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2f5c40;
+    color: white;
+    height: 80px;
+    padding: 0 20px;
+}
+
+.navbar .logo img {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.navbar .logo span {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+main {
+    padding: 100px 20px 20px; 
+    text-align: center;
+}
+
+.welcome h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    font-size: 18px;
+}
+
+.participants {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.participants p {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Привязка карты</title>
+    <link rel="stylesheet" href="../css/link_card.css"> <!-- Путь к стилям -->
+</head>
+<body>
+
+    <div class="link-card-container">
+        <h1>Привязка карты</h1>
+        
+        <!-- Форма привязки карты -->
+        <form id="link-card-form" class="form-container">
+            <div class="input-group">
+                <label for="card-number">Номер карты</label>
+                <input type="text" id="card-number" name="card-number" required placeholder="Введите номер карты">
+            </div>
+
+            <div class="input-group">
+                <label for="card-expiry">Срок действия</label>
+                <input type="month" id="card-expiry" name="card-expiry" required>
+            </div>
+
+            <div class="input-group">
+                <label for="card-cvc">CVC</label>
+                <input type="text" id="card-cvc" name="card-cvc" required placeholder="Введите CVC">
+            </div>
+
+            <button type="submit" class="submit-btn">Привязать карту</button>
+        </form>
+
+        <div id="card-message" class="message"></div>
+    </div>
+
+    <script src="../js/link_card.js"></script> <!-- Путь к JS файлу -->
+</body>
+</html>

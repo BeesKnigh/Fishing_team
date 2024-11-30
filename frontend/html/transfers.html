@@ -17,17 +17,53 @@
                 <label for="oper_type">Тип операции:</label>
                 <select id="oper_type" name="oper_type" required>
                     <option value="">Выберите тип операции</option>
-                    <option value="purchase">Покупка</option>
-                    <option value="refund">Возврат</option>
+                    <option value="payment">Зарплата</option>
                     <option value="transfer">Перевод</option>
-                    <option value="withdrawal">Снятие наличных</option>
+                    <option value="diff_country">Другая страна</option>
+                    <option value="in_acc">Пополнение</option>
+                    <option value="decrease_on_acc">Снятие со счета</option>
                 </select>
+            </div>
+
+            <!-- Тип устройства -->
+            <div class="input-group">
+                <label for="device_type">Тип устройства:</label>
+                <select id="device_type" name="device_type" required>
+                    <option value="">Выберите тип устройства</option>
+                    <option value="ATM">ATM</option>
+                    <option value="pos_atm">POS-ATM</option>
+                    <option value="cash_in">Cash-in</option>
+                    <option value="cash_out">Cash-out</option>
+                    <option value="Portable_trm">Portable TRM</option>
+                </select>
+            </div>
+
+            <!-- Тип карты -->
+            <div class="input-group">
+                <label for="card_type">Тип карты:</label>
+                <select id="card_type" name="card_type" required>
+                    <option value="">Выберите тип карты</option>
+                    <option value="DEBIT">DEBIT</option>
+                    <option value="CREDIT">CREDIT</option>
+                </select>
+            </div>
+
+            <!-- Код трансфера -->
+            <div class="input-group">
+                <label for="tran_code">Код трансфера:</label>
+                <input type="number" id="tran_code" name="tran_code" required placeholder="Введите код трансфера">
+            </div>
+
+            <!-- Баланс -->
+            <div class="input-group">
+                <label for="balance">Баланс:</label>
+                <input type="number" id="balance" name="balance" required placeholder="Введите баланс" min="0" max="1000000" step="0.01">
             </div>
 
             <!-- Сумма операции -->
             <div class="input-group">
                 <label for="sum">Сумма операции:</label>
-                <input type="number" id="sum" name="sum" required placeholder="Введите сумму" min="1">
+                <input type="number" id="sum" name="sum" required placeholder="Введите сумму" min="1" max="1000000" step="0.01">
             </div>
 
             <!-- Количество неверных попыток ввода PIN -->
@@ -36,15 +72,10 @@
                 <input type="number" id="pin_inc_count" name="pin_inc_count" required placeholder="Введите количество неверных попыток" min="0">
             </div>
 
-            <!-- Статус операции -->
+            <!-- Ваша привязанная карта -->
             <div class="input-group">
-                <label for="oper_status">Статус операции:</label>
-                <select id="oper_status" name="oper_status" required>
-                    <option value="">Выберите статус операции</option>
-                    <option value="pending">В ожидании</option>
-                    <option value="completed">Завершено</option>
-                    <option value="failed">Неудача</option>
-                </select>
+                <label for="sender-card">Ваша привязанная карта</label>
+                <input type="text" id="sender-card" name="sender-card" readonly placeholder="Карта не привязана">
             </div>
 
             <button type="submit" id="transfer-btn">Оформить транзакцию</button>

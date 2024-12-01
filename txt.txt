@@ -1,0 +1,65 @@
+Данные
+Название   Формат    Пример данных
+transaction_id|int64|1157921
+
+ip|object|91.107.0.90
+
+device_id|float64|982.0
+
+device_type|object|port_trm
+
+tran_code|int64|30
+
+mcc|int64|7103
+
+client_id|int64|969838140
+
+card_type|object|DEBIT
+
+pin_inc_count|int64|0
+
+card_status|object|active
+
+expiration_date|object|2030-06-10
+
+datetime|object|2022-03-09 09:56:51
+
+sum|float64|510.22
+
+oper_type|object|transfer
+
+balance|float64|670814.78
+
+
+
+коды транзакций:
+-1  -   отколнено
+25  -   Перевод в другую страну
+30  -   Перевод
+
+
+
+перевести act и blk в active и blocked
+atm = ATM 
+pos trm, prtbl trm, port_trm, Portable term = port_trm
+
+
+То что мы должны вводить в окне transaction
+oper_type|object|payment, transfer, diff_country, in_acc, decrease_on_acc, from_acc, bad, err_code(в случае неудачи), out
+sum|float64|Сумма перевода (любые значения до 1 миллиона)
+pin_inc_count|int64|от 0 до 3
+device_type|object|ATM, pos_atm, cash_in, cash_out, Portable_trm
+
+То что мы вводим где-то в другом месте, либо само подвзяывается
+card_type|object|DEBIT, CREDIT
+tran_code|int64|451, 30, 25, 20, 10, -1
+balance|float64|ну это как никак баланс (до 1 миллиона)
+
+
+
+[I 2024-11-30 07:19:23,660] Trial 49 finished with value: 0.9953534603118896 and parameters: {'lstm_units_1': 96, 'dropout': 0.33716174554726885, 'lstm_units_2': 96, 'dropout_dense': 0.41396273669382105}. Best is trial 4 with value: 0.9837175607681274.
+Trial 49 - test_loss: 0.9953534603118896, test_mse: 0.9946703910827637
+Best hyperparameters: {'lstm_units_1': 32, 'dropout': 0.3116036152445094, 'lstm_units_2': 128, 'dropout_dense': 0.44274738946248593}
+Best trial: 4
+Best trial value: 0.9837175607681274
+Best trial parameters: {'lstm_units_1': 32, 'dropout': 0.3116036152445094, 'lstm_units_2': 128, 'dropout_dense': 0.44274738946248593}

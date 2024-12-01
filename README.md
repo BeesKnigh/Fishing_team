@@ -12,10 +12,8 @@
 # Метрики качества решения
 ## Описание метрик
 
-1. Метрика MSE (Mean Squared Error) Формула для вычисления MSE:
-
-$$\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$ 
-
+1. Метрика Центр-Инвеста: ```74%```
+2. 
 # Инструкция по работе с проектом
 ## Создание виртуальной среды и работа с ноутбуками
 
@@ -39,28 +37,69 @@ pip install -r requirements.txt
 ## Режим разработки
 
 Режим разработки ведется в следующих Jupyter Notebook'ах:
-- `ds_creation.ipynb`
-   - Представление текстовых .docx-файлов заключений типа HMI и SSTS в виде датасета, хранящийся в `data\raw_data`
-   - Формирование целевого признака на основе размеченных данных из `data\raw_data\train_data_markup.xlsx`
+- `main_solution.ipynb`
+- `isolation_forest_solution.ipynb`
+   - Представление текстовых табличных данных типа csv в виде датасета, хранящийся в `data\dataset.csv`
   
 # Структура проекта
 
 ```bash
 atom-compliance-ml
 ├─ .gitignore
-├─ data                          # Данные для обучения и тестирования
+├─ data                          # Данные для обучения и тестирования, а также сама метрика
 │  ├─ dataset.csv
-├─ logs                          # Логи инференса (FULL LAUNCH)
-├─ frontend                      # Весь фронтенд проекта
+│  ├─ metric.txt
+│  ├─ preds.csv
+│  ├─ processed_data.csv           # Весь фронтенд проекта  
+├─ frontend
+│  ├─ assets
+│  │  ├─ logo.png
+│  ├─ css
+│  │  ├─ link_card.css
+│  │  ├─ profile.css
+│  │  ├─ styles.css
+│  │  ├─ styles_login.css
+│  │  ├─ success_styles.css
+│  │  ├─ transfers.css
+│  ├─ html
+│  │  ├─ index.html
+│  │  ├─ link_card.html
+│  │  ├─ login.html
+│  │  ├─ profile.html
+│  │  ├─ register.html
+│  │  ├─ transfers.html
+│  ├─ js
+│  │  ├─ link_card.js
+│  │  ├─ login.js
+│  │  ├─ logout.js
+│  │  ├─ profile.js
+│  │  ├─ register.js
+│  │  ├─ transfers.js                     
 ├─ backend                       # Весь бекенд проекта
-│  ├─ src                       
-└─ model
-   ├─ src
-   │  ├─ notebooks   
-   │  ├─ modules
-   │  ├─ scripts 
-   ├─ eda                             # Ноутбуки для обучения и экспериментов, модули
-   ├─ models                    # Функциональная и бизнес логика, используемая во всех ноутбуках  
+│  ├─ src
+│  │  ├─ api
+│  │  │  ├─ client.py
+│  │  ├─ database
+│  │  │  ├─ database.py
+│  │  │  ├─ models.py
+│  │  │  ├─ schemas.py
+│  ├─ main.py                      
+└─ model                     # Ноутбуки для обучения и экспериментов, модули, EDA анализ
+   ├─ src   
+   │  ├─ notebooks
+   │  │  ├─ isolation_forest_solution.ipynb
+   │  │  ├─ main_colution.ipynb
+   │  ├─ scripts
+   │  │  ├─ processing_dataset.py
+   ├─ eda
+   │  │  ├─ graphs
+   │  │  │  ├─ corr_matrix.png
+   │  │  │  ├─ dataset_stat.png
+   │  │  │  ├─ location_statics.png
+   │  │  │  ├─ spendings_day_of_week.png
+   │  │  │  ├─ spendings_device_type
+   │  │  ├─ notebooks
+   │  │  │  ├─ graphs.ipynb                              
 
 ```
 

@@ -1,26 +1,40 @@
-// Получаем элементы формы входа
 const loginForm = document.getElementById("login-form");
 const errorMessage = document.getElementById("error-message");
 
-// Обработчик отправки формы входа
-loginForm.addEventListener("submit", function(event) {
+loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();  // Останавливаем стандартную отправку формы
 
-    // Получаем введенные значения логина и пароля
     const login = document.getElementById("login").value;
     const password = document.getElementById("password").value;
 
-    // Получаем сохраненные значения из localStorage
-    const storedLogin = localStorage.getItem("userLogin");
-    const storedPassword = localStorage.getItem("userPassword");
+    try {
+        // Отправляем запрос на бэкенд для получения токена
+        const response = await fetch('http://localhost:8000/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                username: login,
+                password: password,
+            }),
+        });
 
-    // Проверяем, совпадают ли логин и пароль
-    if (login === storedLogin && password === storedPassword) {
-        // Перенаправляем на профиль, если данные верные
-        window.location.href = "profile.html";  // Профиль или другая страница
-    } else {
-        // Если данные неверные, показываем ошибку
-        errorMessage.textContent = "Неверный логин или пароль.";
+        if (response.ok) {
+            const data = await response.json();
+            const token = data.access_token;
+            localStorage.setItem("access_token", token);  // Сохраняем токен в localStorage
+            localStorage.setItem("userLogin", login);  // Сохраняем логин в localStorage
+
+            // Перенаправляем на страницу профиля
+            window.location.href = "profile.html";
+        } else {
+            errorMessage.textContent = "Неверный логин или пароль.";
+            errorMessage.style.color = "red";
+        }
+    } catch (error) {
+        console.error("Ошибка при входе:", error);
+        errorMessage.textContent = "Ошибка соединения с сервером.";
         errorMessage.style.color = "red";
     }
 });

@@ -61,6 +61,11 @@ class Card(Base):
     owner = relationship("Client", back_populates="cards")
 
 
+class BlacklistedToken(Base):
+    __tablename__ = "blacklisted_tokens"
+
+    token = Column(String, primary_key=True, index=True)
+
 # Создание базы данных
 DATABASE_URL = "sqlite:///./test.db"  # Используем SQLite для простоты
 

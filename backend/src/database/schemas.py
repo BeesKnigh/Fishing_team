@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime,date
 from typing import Optional
 
 # Схема для авторизации
@@ -9,6 +9,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str
+    client_id: int
 
 # Базовая модель для клиента
 class ClientBase(BaseModel):
@@ -51,7 +52,7 @@ class Transaction(TransactionBase):
 class CardBase(BaseModel):
     card_type: str
     card_status: Optional[str] = "active"  # Значение по умолчанию
-    expiration_date: datetime
+    expiration_date: date
     balance: float
 
 class CardCreate(CardBase):

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from database.models import Client as DBClient, Transaction as DBTransaction, Card as DBCard
+from database.models import Client as DBClient, Transaction as DBTransaction, Card as DBCard, BlacklistedToken
 from database.schemas import Client, ClientCreate, Transaction, TransactionCreate, Card, CardCreate, TokenData, Token
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -8,11 +8,12 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from typing import List
 from database.database import get_db
+import os
 
 router = APIRouter()
 
 # Секретный ключ для создания JWT токенов
-SECRET_KEY = "your_secret_key_here"
+SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -60,8 +61,15 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
+
+    # Добавляем client_id в токен
+    client_id = data.get("client_id")
+    if client_id:
+        to_encode.update({"client_id": client_id})
+
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 # Определение схемы OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -74,13 +82,27 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        # Декодируем токен
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        if username is None:
+        client_id: int = payload.get("client_id")  # Добавляем извлечение client_id из токена
+
+        if username is None or client_id is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
+
+    # Проверка, есть ли токен в черном списке
+    blacklisted_token = db.query(BlacklistedToken).filter(BlacklistedToken.token == token).first()
+    if blacklisted_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has been blacklisted",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Если токен валидный и не в черном списке, возвращаем данные пользователя
+    token_data = TokenData(username=username, client_id=client_id)  # Добавляем client_id в объект TokenData
     return token_data
 
 # Логин (получение JWT токена)
@@ -89,9 +111,25 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     user = db.query(DBClient).filter(DBClient.name == form_data.username).first()
     if user is None or not verify_password(form_data.password, user.client_pas):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": form_data.username}, expires_delta=access_token_expires)
+
+    # Здесь мы добавляем client_id в данные для токена
+    access_token = create_access_token(data={"sub": form_data.username, "client_id": user.id},
+                                       expires_delta=access_token_expires)
+
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/logout")
+def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    # Добавляем токен в черный список
+    blacklisted_token = BlacklistedToken(token=token)
+    db.add(blacklisted_token)
+    db.commit()
+
+    # Теперь можно вернуться с сообщением об успешном выходе
+    return {"message": "Logout successful"}
 
 # Получить всех клиентов
 @router.get("/clients", response_model=List[Client])
@@ -182,17 +220,29 @@ def get_cards(client_id: int, db: Session = Depends(get_db)):
 
 # Создать новую карту
 @router.post("/cards", response_model=Card)
-def create_card(card: CardCreate, db: Session = Depends(get_db)):
+def create_card(card: CardCreate, db: Session = Depends(get_db), current_user: TokenData = Depends(get_current_user)):
+    # Используем client_id из текущего пользователя (извлечено из токена)
+    client_id = current_user.client_id
+
+    # Проверяем, существует ли клиент в базе данных
+    client = db.query(DBClient).filter(DBClient.id == client_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    # Создаем карту с клиентом
     db_card = DBCard(
         card_type=card.card_type,
         card_status=card.card_status,
         expiration_date=card.expiration_date,
         balance=card.balance,
-        client_id=card.client_id
+        client_id=client_id  # Привязываем карту к client_id из токена
     )
 
     db.add(db_card)
     db.commit()
     db.refresh(db_card)
+
+    # Добавляем транзакции для привязанной карты
     add_cards_to_transactions(db)
+
     return db_card

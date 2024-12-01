@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         senderCardField.value = `Тип карты: ${linkedCard.cardType}, Баланс: ${linkedCard.balance} руб.`;
     }
 
-    transferForm.addEventListener("submit", function(event) {
+    transferForm.addEventListener("submit", async function(event) {
         event.preventDefault(); // Отменяем стандартную отправку формы
 
         // Получаем значения из формы
@@ -38,11 +38,40 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        // Логика успешной транзакции
-        messageDiv.textContent = `Транзакция: ${operType}, сумма: ${sum} руб.`;
-        messageDiv.style.color = "#4CAF50"; // Зеленый цвет для успешного сообщения
+        try {
+            // Отправляем данные о транзакции на сервер
+            const response = await fetch('http://localhost:8000/transactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("access_token")}`,  // Используем токен из localStorage
+                },
+                body: JSON.stringify({
+                    oper_type: operType,
+                    sum: sum,
+                    pin_inc_count: pinIncCount,
+                    client_id: linkedCard.clientId,  // ID клиента (можно хранить в linkedCard)
+                    card_type: linkedCard.cardType,  // Тип карты
+                    card_status: linkedCard.cardStatus,  // Статус карты
+                    expiration_date: linkedCard.expirationDate,  // Дата окончания карты
+                }),
+            });
 
-        // Очистить поля формы после успешного перевода
-        transferForm.reset();
+            if (response.ok) {
+                // Если транзакция успешна
+                messageDiv.textContent = `Транзакция успешно проведена: ${operType}, сумма: ${sum} руб.`;
+                messageDiv.style.color = "#4CAF50"; // Зеленый цвет для успешного сообщения
+                transferForm.reset();
+            } else {
+                const errorData = await response.json();
+                messageDiv.textContent = errorData.detail || "Ошибка при проведении транзакции.";
+                messageDiv.style.color = "red";
+            }
+        } catch (error) {
+            console.error("Ошибка при проведении транзакции:", error);
+            messageDiv.textContent = "Ошибка соединения с сервером.";
+            messageDiv.style.color = "red";
+        }
     });
 });
+

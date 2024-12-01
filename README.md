@@ -99,8 +99,7 @@ atom-compliance-ml
    │  │  │  ├─ spendings_day_of_week.png
    │  │  │  ├─ spendings_device_type
    │  │  ├─ notebooks
-   │  │  │  ├─ graphs.ipynb                              
-
+   └─ └─ └─ └─ graphs.ipynb                              
 ```
 
 # Контакты
